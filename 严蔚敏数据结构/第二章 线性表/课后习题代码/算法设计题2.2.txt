@@ -1,0 +1,92 @@
+#include "iostream"
+using namespace std;
+typedef struct LNode 
+{
+	int data;
+	struct LNode *next;
+}LNode,*LinkList;
+void InitList(LinkList &L)
+{
+	L=new LNode;
+	L->next=NULL;
+}
+void CreateList(LinkList &L,int n)
+{
+	LNode *p,*mark;
+	mark=L;
+	mark->next=NULL;
+	for(int i=0;i<n;i++)
+	{
+		p=new LNode;
+		cin>>p->data;
+		p->next=mark->next;
+		mark->next=p;
+		mark=p;
+	}
+}
+void OutputList(LinkList &L)
+{
+	LNode *Mark;
+	Mark=L->next;
+	while(Mark)
+	{
+		cout<<Mark->data;
+		if(Mark->next!=NULL)cout<<" ";
+		Mark=Mark->next;
+	}
+	cout<<"\n";
+}
+void DecendToIncrease(LinkList &LA,LinkList &LB)
+{
+	LNode *pa,*pb,*pc,*marka,*markb;
+	pa=LA->next,pb=LB->next,pc=LA,pc->next=NULL;
+	while(pa&&pb)
+	{
+		if(pa->data<=pb->data)
+		{
+			marka=pa->next;
+			pa->next=pc->next;
+			pc->next=pa;
+			pa=marka;
+		}
+		else
+		{
+			markb=pb->next;
+			pb->next=pc->next;
+			pc->next=pb;
+			pb=markb;
+		}
+	}
+     
+	while(pa)
+	{
+		marka=pa->next;
+		pa->next=pc->next;
+		pc->next=pa;
+		pa=marka;
+	}
+	while(pb)
+	{
+		markb=pb->next;
+		pb->next=pc->next;
+		pc->next=pb;
+		pb=markb;
+	}
+	delete LB;
+}
+
+int main()
+{
+	int n,m;
+	while(cin>>n>>m)
+	{
+		LinkList LA,LB;
+		InitList(LA);
+		InitList(LB);
+		CreateList(LA,n);
+		CreateList(LB,m);
+		DecendToIncrease(LA,LB);
+		OutputList(LA);
+	}
+	return 0;
+}

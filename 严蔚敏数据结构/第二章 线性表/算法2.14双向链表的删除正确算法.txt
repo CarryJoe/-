@@ -1,0 +1,113 @@
+#include <iostream>
+using namespace std;
+typedef struct DuLNode
+{
+	int data;
+	DuLNode *next;
+	DuLNode *prior;
+}DuLNode,*DuLinkList;
+void InitDuList(DuLinkList &L)
+{
+	L=new DuLNode;
+	L->next=NULL;
+	L->prior=NULL;
+}
+DuLNode *CreateDuLinkList(DuLinkList &L,int n)          //创建双向链表  
+{
+	DuLNode *Mark,*p;
+	Mark=L;
+	int i;
+	for(i=0;i<n;i++)
+	{
+		p=new DuLNode;
+		cin>>p->data;
+		p->next=NULL;
+		Mark->next=p;
+		p->prior=Mark;
+		Mark=Mark->next;
+	}
+	return Mark;
+}
+void OutPutList_Next(DuLinkList L)              //顺序输出
+{
+	DuLNode *Mark;
+	Mark=L->next;
+	while(Mark!=L)
+	{
+		cout<<Mark->data;
+		if(Mark->next!=L)cout<<" ";
+		else cout<<"\n";
+		Mark=Mark->next;
+	}
+}
+void OutPutList_Prior(DuLinkList L)              //逆序输出
+{
+	DuLNode *Mark;
+	Mark=L;
+	while(Mark->prior)
+	{
+		cout<<Mark->data;
+		if(Mark->prior->prior)cout<<" ";
+		else   cout<<"\n";
+		Mark=Mark->prior;
+	}
+}
+bool LinkInsert_DuL(DuLinkList &L,int i,int e)       //循环链表中插入新节点
+{
+  DuLNode *p,*s=new DuLNode;
+  s->data=e;
+  p=L->next;
+  int j=0;
+  while(p)
+  {
+	  j++;
+	  if(i==j)
+	  {
+		  s->prior=p->prior;
+		  s->next=p;
+		  p->prior->next=s;
+		  p->prior=s;
+		  break;
+	  }
+	  p=p->next;
+  }
+  if(i==j)return true;
+  return false;
+}
+void ListDelete_DuL(DuLinkList &L,int mink,int maxk,DuLinkList &Rear)
+{
+	DuLNode *p,*Mark;                        //构成循环双向链表  不然最后对一个节点操作是  p->next->prior=p->prior  出现错误
+	p=L->next;
+	Rear->next=L;
+	L->prior=Rear;
+	while(p!=L) 
+	{
+		if(mink<p->data&&p->data<maxk)                            //查找与删除步骤同时进行
+		{
+			Mark=p->prior;
+			p->prior->next=p->next;
+			p->next->prior=p->prior;       //当p为最后一个元素时
+			delete p;
+		    p=Mark;
+		}
+		p=p->next;
+	}
+
+}
+int main()
+{
+	int n,i,a,j,e,T,mink,maxk;
+	DuLinkList Rear;
+	cin>>T;
+	while(T--)
+	{
+		  cin>>n;
+	      DuLinkList L;
+		  InitDuList(L);
+		  Rear=CreateDuLinkList(L,n);
+		  cin>>mink>>maxk;    
+		  ListDelete_DuL(L,mink,maxk,Rear);
+		  OutPutList_Next(L);
+	}
+	return 0;
+}

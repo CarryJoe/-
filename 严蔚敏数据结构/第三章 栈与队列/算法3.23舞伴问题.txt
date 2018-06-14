@@ -1,0 +1,103 @@
+#include "iostream"
+#include "string"
+using namespace std;
+typedef struct
+{
+	char name[20];
+	bool sex;
+}Person;
+#define MAXQSIZE 100
+typedef struct
+{
+	Person *base;
+	int front;
+	int rear;
+}SqQueue;
+SqQueue Mdancers,Fdancers;
+void InitQueue(SqQueue &Dancers)
+{
+	Dancers.base=new Person [MAXQSIZE];
+	Dancers.front=Dancers.rear=0;
+}
+bool EnQueue(SqQueue &Dancers,Person p)
+{
+	if((Dancers.rear+1)%MAXQSIZE==Dancers.front)return false;   //队满
+	Dancers.base[Dancers.rear]=p;
+	Dancers.rear=(Dancers.rear+1)%MAXQSIZE;
+	return true;
+}
+bool DeQueue(SqQueue &Dancers,Person &p)
+{
+	if(Dancers.front==Dancers.rear)return false;   //队空
+	p=Dancers.base[Dancers.front];
+	Dancers.front=(Dancers.front+1)%MAXQSIZE;
+	return true;
+}
+bool GetHead(SqQueue Dancers,Person &p)
+{
+	if(Dancers.front==Dancers.rear)  //队空
+		return false;
+	p=Dancers.base[Dancers.front];
+	return true;
+}
+bool QueueEmpty(SqQueue Dancers)
+{
+	if(Dancers.front==Dancers.rear)return true;
+	else return false;
+}
+void DanceParter(Person dancer[],int num)
+{
+	int i;
+	Person p;
+	InitQueue(Mdancers);
+	InitQueue(Fdancers);
+	for(i=0;i<num;i++)
+	{
+		p=dancer[i];
+		if(p.sex==false)EnQueue(Fdancers,p);                                //p.sex==true  表示男性
+		else EnQueue(Mdancers,p);
+	}
+	cout<<"The dancing parters are:\n";
+	while(!QueueEmpty(Fdancers)&&!QueueEmpty(Mdancers))
+	{
+		DeQueue(Fdancers,p);
+		cout<<p.name<<" ";      //女士出队
+		
+		DeQueue(Mdancers,p);    //男士出列
+		cout<<p.name<<endl;
+	}
+	if(!QueueEmpty(Fdancers))
+	{
+		if(GetHead(Fdancers,p))
+		{
+			cout<<"The first woman to get a partner is: Miss. "<<p.name<<endl;
+		}
+	}
+	else if(!QueueEmpty(Mdancers))
+	{
+		if(GetHead(Mdancers,p))
+		{
+			cout<<"The first man to get a partner is: Mr. "<<p.name<<endl;
+		}
+	}
+}
+int main()
+{
+	int n,i;
+	while(cin>>n)
+	{
+		Person *Dancers=new Person[n];
+		for(i=0;i<n;i++)
+		{
+			cin>>Dancers[i].name>>Dancers[i].sex;
+		}
+		DanceParter(Dancers,n);
+	}
+	return 0;
+}
+/*
+3
+carry 1
+david 1
+money 0
+*/

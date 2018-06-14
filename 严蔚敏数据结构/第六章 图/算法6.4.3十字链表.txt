@@ -1,0 +1,89 @@
+#include <iostream>
+using namespace std;
+typedef enum {ATOM,LIST} ElemTag;
+#define MAX_VERTEX_NUM 20
+typedef struct ArcBox
+{
+	int tailvex,headvex;
+	struct ArcBox *hlink,*tlink;
+  //InfoType *info;    
+}ArcBox;
+typedef struct VexNode
+{
+	char v;
+	ArcBox *firstin,*firstout;
+}VexNode,XList[MAX_VERTEX_NUM];
+typedef struct
+{
+	XList xlist;
+	int vexnum,arcnum;
+}OLGraph;
+int LocateVex(OLGraph G,char V)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(V==G.xlist[i].v)
+			return i;
+	}
+	return -1;
+}
+int main()
+{
+	OLGraph G;
+	int i,j,k,w;
+	ArcBox *p;
+	char v1,v2;
+	while(true)
+	{
+		cin>>G.vexnum>>G.arcnum;         //顶点数弧数
+		for(i=0;i<G.vexnum;i++) 
+		{
+			cin>>G.xlist[i].v;           //输入顶点及初始化
+			G.xlist[i].firstin=NULL;
+			G.xlist[i].firstout=NULL;
+		}
+		for(k=0;k<G.arcnum;k++)
+		{
+			cin>>v1>>v2;
+			i=LocateVex(G,v1);
+			j=LocateVex(G,v2);
+			p=new ArcBox;
+		
+			p->headvex=i;
+			p->tailvex=j;
+
+			p->tlink=G.xlist[i].firstout;
+			G.xlist[i].firstout=p;
+
+			p->hlink=G.xlist[j].firstin;
+			G.xlist[j].firstin=p;
+		}
+		for(i=0;i<G.vexnum;i++)
+		{
+		    int	cnt=0;
+			p=G.xlist[i].firstout;
+			while(p)
+			{
+				cnt++;
+				p=p->tlink;
+			}
+			p=G.xlist[i].firstin;
+			while(p)
+			{
+				cnt++;
+				p=p->hlink;
+			}
+			cout<<"顶点"<<char(i+'A')<<"度为:"<<cnt<<endl;
+		
+		}
+	}
+	return 0;
+}
+/*测试数据
+3 4
+A B C
+A B
+A C
+B C
+C A
+*/

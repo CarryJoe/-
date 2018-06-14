@@ -1,0 +1,123 @@
+#include "iostream"
+using namespace std;
+typedef struct PNode 
+{
+	float coef;
+	int expn;
+	struct PNode *next;
+}PNode,*Polynomial;
+int ListLength(Polynomial L)
+{
+	PNode *p;
+	int length=0;
+	p=L->next;
+	while(p)
+	{
+		length++;
+		p=p->next;
+	}
+	return length;
+}
+void InitList(Polynomial &L)
+{
+	L=new PNode;
+	L->next=NULL;
+}
+void CreatePoly(Polynomial &P,int n)
+{
+  //	P=new PNode;     已经调用初始化函数
+  //   P->next=NULL;
+	int i,j=0;
+	PNode *q,*pre,*s;
+	 for(i=1;i<=n;i++)
+	{
+		s=new PNode;
+		cin>>s->coef>>s->expn;
+		pre=P;
+		q=P->next;
+		while(q&&q->expn<s->expn)
+		{
+			pre=q;
+			q=q->next;
+		}
+		s->next=q;
+	    pre->next=s;
+	}	
+}
+void AddPolyn(Polynomial &Pa,Polynomial &Pb)
+{
+	int Sum;
+	PNode *p1,*p2,*p3,*r;
+	p1=Pa->next,p2=Pb->next;
+	p3=Pa;
+	while(p1&&p2)
+	{
+		if(p1->expn==p2->expn)
+		{
+			Sum=p1->coef+p2->coef;
+			if(Sum!=0)
+			{
+				p1->coef=Sum;
+				p3->next=p1;
+				p3=p1;   // p3=p3->next;
+				p1=p1->next;
+				r=p2;
+				p2=p2->next;
+				delete r;
+			}
+			else
+			{
+				r=p1;
+				p1=p1->next;
+				delete r;
+
+				r=p2;
+				p2=p2->next;
+				delete r;
+			}
+		}
+		else if(p1->expn<p2->expn)
+		{
+			p3->next=p1;
+			p3=p1;
+			p1=p1->next;
+		}
+		else
+		{
+			p3->next=p2;
+			p3=p2;
+			p2=p2->next;
+		}
+	}
+	p3->next=p1?p1:p2;
+	delete Pb;
+}
+void OutPutList(Polynomial LA)
+{
+	PNode *p;
+	p=LA->next;
+	while(p)
+	{
+		cout<<p->coef<<" "<<p->expn;
+		if(p->next)cout<<" ";
+		else
+			cout<<"\n";
+		p=p->next;
+	}
+}
+int main()
+{
+	int n,m;
+	Polynomial LA,LB,LC;
+	while(cin>>n>>m)
+	{
+		InitList(LA);
+		InitList(LB);
+		CreatePoly(LA,n);
+		CreatePoly(LB,m);
+		AddPolyn(LA,LB);
+		OutPutList(LA);
+	}
+	return 0;
+}
+

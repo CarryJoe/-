@@ -1,0 +1,75 @@
+#include "iostream"
+#include "string"
+using namespace std;
+//typedef int SElemType
+#define MAXSIZE 100
+typedef struct
+{
+	char *base;
+	char *top;
+	int StackSize;
+}SqStack;
+bool InitStack(SqStack &S)
+{
+	S.base=new char[MAXSIZE];
+	if(!S.base)return false;
+	S.top=S.base;
+	S.StackSize=MAXSIZE;
+   return true;
+}
+bool Push(SqStack &S,char e)
+{
+	if(S.top-S.base==S.StackSize)return false;
+	*S.top++=e;
+	return true;
+}
+bool Pop(SqStack &S,char &e)
+{
+	if(S.base==S.top)return false;
+	e=*--S.top;
+	return true;
+}
+bool GetTop(SqStack &S,char &e)
+{
+	if(S.base==S.top)return false;
+	e=*(S.top-1);
+	return true;
+}
+int main()
+{
+   int start,n,i;
+   char e;
+   bool f;
+   string s;
+   SqStack S;
+   cin>>n;
+   while(n--)
+   {
+	   cin>>s;
+	   InitStack(S);
+	   f=true;
+	   for(i=0;i<s.size()/2;i++)
+	   {
+		   Push(S,s[i]);
+	   }
+	   start=s.size()/2;
+	   if(s.size()%2!=0)start+=1;
+	   for(i=start;i<s.size();i++)
+	   {
+		  if(Pop(S,e))
+		  {
+		     if(e!=s[i])
+		     {
+				 f=false;
+					 break;  
+			 }
+
+
+		  }
+		 
+	   }
+	   if(f==true)cout<<"Yes\n";
+	   else cout<<"No\n";
+   }
+	return 0;
+}

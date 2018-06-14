@@ -1,0 +1,191 @@
+#include <iostream>
+using namespace std;
+typedef struct LNode
+{
+	int data;
+	LNode *next;
+}LNode,*LinkList;
+void InitList(LinkList &L)
+{
+	L=new LNode;
+	L->next=NULL;
+}
+void InsertLNode(LinkList &L,int n)
+{
+	LNode *p=new LNode;
+	p->data=n;
+	p->next=NULL;
+	LNode *Mark;
+	Mark=L;
+	while(Mark)
+	{
+		if(Mark->next==NULL)
+		{
+			Mark->next=p;
+			break;
+		}
+		Mark=Mark->next;
+	}
+}
+void OutputList(LinkList &L)
+{
+	LNode *Mark;
+	Mark=L->next;
+	while(Mark)
+	{
+		cout<<Mark->data;
+		if(Mark->next!=NULL)cout<<" ";
+		Mark=Mark->next;
+	}
+	cout<<"\n";
+}
+
+bool GetElem(LinkList L,int j,int &e)
+{
+	LNode *Mark;
+	Mark=L->next;
+	int i=0;
+	while(Mark)
+	{
+		i++;
+		if(j==i)
+		{ 
+			e=Mark->data;
+			break;
+		}
+		Mark=Mark->next;
+	}
+	if(j!=i)
+		return false;
+	else
+		return true;
+}
+LNode * LocateElem(LinkList L,int e)
+{
+	LNode *Mark;
+	Mark=L->next;
+	while(Mark)
+	{
+		if(Mark->data==e)
+			return Mark;
+		Mark=Mark->next;
+	}
+	return Mark;
+}
+bool ListInsert(LinkList &L,int ii,int e)
+{
+	LNode *Mark;
+	Mark=L->next;
+	
+	int jj=0;
+	while(Mark)
+	{
+		jj++;
+		if(jj==ii)
+		{
+			LNode *p=new LNode;
+			p->data=e;
+			p->next=Mark->next;
+			Mark->next=p;
+			break;
+		}
+		Mark=Mark->next;
+	}
+	if(jj==ii)return true;
+	else
+	return false;
+}
+void ListDelete(LinkList &L,int mink,int maxk)
+{
+	int j=0;
+	bool f;
+	LNode *Mark;
+	Mark=L;
+	while(Mark->next)
+	{
+		f=false;
+		if(Mark->next->data>mink&&Mark->next->data<maxk)
+		{
+			Mark->next=Mark->next->next;
+			f=true;
+		}
+		if(f==false)Mark=Mark->next;	   //当前节点不满足条件才继续往下走
+	}
+}
+void CreateList_H(LinkList &L,int n)     //前插法（头插法就地逆置）
+{
+		LNode *p;
+		int i;
+		for(i=0;i<n;i++)
+		{
+			p=new LNode;
+			cin>>p->data;
+			p->next=L->next;
+			L->next=p;
+		}
+}
+void CreateList_R(LinkList &L,int n)    //后插法(尾插法)
+{
+	LNode *p,*Rear;
+	Rear=L;
+	int i;
+	for(i=0;i<n;i++)
+	{
+		p=new LNode;
+		cin>>p->data;
+		p->next=NULL;
+		Rear->next=p;
+		Rear=Rear->next;    //或是 Rear=p;
+	}
+}
+void  CirculationList(LinkList &LA,LinkList &LB,int n)      //创建循环链表并合并输出
+{
+	int i;
+	LNode *MarkA,*MarkB;
+	MarkA=LA,MarkB=LB;
+
+	MarkA->next=MarkA;
+	MarkB->next=MarkB;
+	LNode *p;
+	for(i=0;i<=n/2;i++)
+	{
+		p=new LNode;
+		cin>>p->data;
+		p->next=MarkA->next;
+		MarkA->next=p;
+		MarkA=MarkA->next;
+	}
+	for(i=n/2+1;i<n;i++)
+	{
+		p=new LNode;
+		cin>>p->data;
+		p->next=MarkB->next;
+		MarkB->next=p;
+		MarkB=MarkB->next;
+	}
+
+	p=MarkB->next->next;                       //循环链表合并
+	MarkB->next=MarkA->next;
+	MarkA->next=p;
+	MarkA=LA->next;
+	while(MarkA!=LA)
+	{
+		cout<<MarkA->data;
+		if(MarkA->next!=LA)cout<<" ";
+		MarkA=MarkA->next;
+	}
+	cout<<"\n";
+}
+int main()
+{
+	int n,i,a,j,e,T,mink,maxk;
+	while(cin>>n)
+	{
+		LinkList LA,LB;
+		InitList(LA);   //初始化函数    
+		InitList(LB);   //初始化函数 
+		CirculationList(LA,LB,n);
+		//Without_Head_LNode(L,n);
+	}
+	return 0;
+}

@@ -1,0 +1,48 @@
+#include "iostream"
+#include "string"
+using namespace std;
+typedef struct LNode
+{
+	int data;
+	struct LNode *next;
+
+}LNode,*LinkList;
+void InitList(LinkList &L)
+{
+	L=new LNode;
+	L->next=NULL;
+}
+void CreateList(LinkList &L,int n)             //递归创建链表
+{
+	if(n==0)return;
+	int i;
+	LNode *p;
+    p= new LNode;
+	cin>>p->data;
+	p->next=L->next;
+	L->next=p;
+	CreateList(L,n-1);
+}
+void TraverseList(LinkList L)                 //递归遍历链表
+{
+	if(L==NULL)
+	{
+		cout<<endl;
+		return;
+	}
+	cout<<L->data;
+	if(L->next!=NULL)cout<<" ";
+	TraverseList(L->next);
+}
+int main()
+{
+	int n;
+	while(cin>>n)
+	{
+		LinkList L;
+		InitList(L);
+		CreateList(L,n);
+		TraverseList(L->next);
+	}
+	return 0;
+}

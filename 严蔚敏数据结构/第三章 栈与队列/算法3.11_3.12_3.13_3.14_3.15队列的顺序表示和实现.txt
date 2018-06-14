@@ -1,0 +1,98 @@
+ #include "iostream"
+#include "string"
+using namespace std;
+#define MAXQSIZE 100
+typedef struct 
+{
+	int *base;
+	int front;
+	int rear;
+}SqQueue;
+bool InitQueue(SqQueue &S){
+	S.base=new int [MAXQSIZE];
+	if(!S.base)return false;
+	S.front=S.rear=0;
+	return true;
+}
+void Print(int e)
+{
+	if(e<10)
+	cout<<"    "<<e;
+	else if(e<100)
+		cout<<"   "<<e;
+	else
+		cout<<"  "<<e;
+}
+bool EnQueue(SqQueue &Q,int e)
+{
+	if((Q.rear+1)%MAXQSIZE==Q.front)
+		return false;
+	Q.base[Q.rear]=e;
+	Q.rear=(Q.rear+1)%MAXQSIZE;
+	return true;
+}
+bool DeQueue(SqQueue &Q,int &e)
+{
+	if(Q.front==Q.rear)return false;
+	e=Q.base[Q.front];
+	Q.front=(Q.front+1)%MAXQSIZE;
+	return true;
+}
+bool GetHead(SqQueue &S,int &e)
+{
+	if(S.front==S.rear)return false;
+	S.base[S.front]=e;
+	return true;
+}
+int main()
+{
+	int n,j,i;
+	SqQueue Q;
+	while(cin>>n)
+	{
+		int **a= new int *[n];
+		InitQueue(Q);
+		for(i=1;i<=n;i++)
+		{
+			a[i-1]=new int [i];
+			a[i-1][0]=1,a[i-1][i-1]=1;
+		}
+		int front,rear;
+		for(i=2;i<n;i++)
+		{
+		    front=1,rear=i-front;
+			while(true)
+			{
+				a[i][front]=a[i-1][front]+a[i-1][front-1];
+				a[i][rear]=a[i][front];
+				if(front==rear||((rear-front)==1&&a[i][front]==a[i][rear]))break;
+				front++,rear--;
+			}
+		}
+		for(i=0;i<n;i++)
+		{
+			for(j=0;j<=i;j++)
+			{
+				EnQueue(Q,a[i][j]);
+			}
+		}
+		int cnt=0,t=1,e;
+		while(Q.front!=Q.rear)
+		{
+
+			DeQueue(Q,e);
+			cnt++;
+			//cout<<e<<" ";
+			Print(e);
+			if(cnt==t)
+			{
+				cnt=0;
+				t++;
+				cout<<"\n";
+			}
+
+		}
+	}
+	return 0;
+}
+//Ñî»ÔÈý½Ç

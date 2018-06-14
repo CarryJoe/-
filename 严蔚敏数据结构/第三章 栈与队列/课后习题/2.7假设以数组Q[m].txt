@@ -1,0 +1,107 @@
+#include "iostream"
+#include "string"
+using namespace std;
+#define M 9
+typedef struct 
+{
+	int *base;
+	int front;
+	int rear;
+	int tag;
+}SqQueue;
+void InitQueue(SqQueue &Q)
+{
+	Q.base=new int [M];
+	Q.tag=Q.front=Q.rear=0;
+}
+bool Push(SqQueue &Q,int e)
+{
+//	if((Q.rear+1)%M==Q.front)return false;
+	if(Q.front==Q.rear&&Q.tag==1)return false;    //满了
+	Q.base[Q.rear]=e;
+	Q.rear=(Q.rear+1)%M;
+	if(Q.rear==Q.front)Q.tag=1;
+	return true;
+}
+bool Pop(SqQueue &Q,int &e)
+{
+//	if(Q.front==Q.rear)return false;
+	if(Q.front==Q.rear&&Q.tag==0)return false;  //空队列
+	e=Q.base[Q.front];
+	Q.front=(Q.front+1)%M;
+	if(Q.front==Q.rear)Q.tag=0;
+	return true;
+}
+bool QueueEmpty(SqQueue Q)
+{
+	if(Q.front==Q.rear&&Q.tag==0)return true;
+	return false;
+}
+bool GetHead(SqQueue Q,int &e)
+{
+	if(QueueEmpty(Q))return false;
+	e=Q.base[Q.front];
+	return true;
+}
+int main()
+{
+	int n,i,e;
+	bool f;
+	SqQueue Q;
+	while(cin>>n)
+	{
+		f=true;
+		InitQueue(Q);
+		int *a=new int [n];
+		for(i=0;i<n;i++)cin>>a[i];
+		for(i=0;i<n;i++)
+		{
+			if(a[i]==0)
+			{
+				if(QueueEmpty(Q))
+				{
+					f=false;
+					cout<<"UNDERFLOW\n";
+					break;
+				}
+				else
+				{
+					Pop(Q,e);
+				}
+			}
+			else
+			{
+				if(!Push(Q,a[i]))
+				{
+					cout<<"OVERFLOW\n";
+					f=false;
+					break;
+				}
+			}
+		}
+		if(f==true)
+		{
+			if(QueueEmpty(Q))
+			{
+				cout<<"UNDERFLOW\n";
+			}
+			/*else if((Q.rear+1)%M==Q.front)       //是苯宝宝多氯了
+			{
+				cout<<"OVERFLOW\n";
+			}*/
+			else
+			{
+				while((Q.front==Q.rear&&Q.tag!=0)||(Q.rear!=Q.front))
+				{
+
+					Pop(Q,e);
+					cout<<e;
+					if(Q.front==Q.rear&&Q.tag==0)cout<<"\n";
+					else
+						cout<<" ";
+				}
+			}
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;;
+typedef enum {ATOM,LIST} ElemTag;
+void Statistic()
+{
+	int num[36],i,index;
+	char ch;
+	for(i=0;i<36;i++)num[i]=0;
+	while((ch=getchar())!='#')
+	{
+		if(ch>='0'&&ch<='9')
+		{
+			index=(int)(ch-'0');
+			num[index]++;
+		}
+		else if(ch>='A'&&ch<='Z')
+		{
+			index=int(ch-'A'+10);
+			num[index]++;
+		}
+
+	}
+	for(i=0;i<36;i++)
+	{
+		cout<<i+1<<":"<<num[i]<<endl;
+	}
+}
+int main()
+{
+	
+    while(true)
+	{
+		Statistic();
+	}
+	return 0;
+}

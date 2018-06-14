@@ -1,0 +1,167 @@
+#include <iostream>
+using namespace std;
+typedef enum {ATOM,LIST} ElemTag;
+#define MVNum 100
+typedef int OtherInform;
+
+typedef struct ArcNode     //边结点
+{
+	int adjvex;      //顶点Vi的位置
+	struct ArcNode *nextarc;
+	OtherInform info;
+}ArcNode;
+
+typedef struct VNode
+{
+      char data;
+	  ArcNode *firstarc;
+}VNode,AdjList[MVNum];
+typedef struct
+{
+	AdjList vertices;
+	int vexnum,arcnum;
+}ALGraph;
+void CreateUDG(ALGraph &G)
+{
+	char v1,v2;
+	int i,j,k;
+	cin>>G.vexnum>>G.arcnum;
+	for(i=0;i<G.vexnum;i++)
+	{
+		cin>>G.vertices[i].data;
+		G.vertices[i].firstarc=NULL;
+	}
+	for(k=0;k<G.arcnum;k++)
+	{
+		cin>>v1>>v2;
+		i=LocateVex(G,v1);
+		j=LocateVex(G,v2);
+		ArcNode *p1=new ArcNode;
+		p1->adjvex=j;
+		p1->nextarc=G.vertices[i].firstarc;       //采用头插法
+		G.vertices[i].firstarc=p1;
+
+	    ArcNode *p2=new ArcNode;
+		
+		p2->adjvex=i;
+		p2->nextarc=G.vertices[j].firstarc;
+		G.vertices[j].firstarc=p2;
+	}
+}
+int LocateVex(ALGraph G,char v1)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(v1==G.vertices[i].data)
+			return i;
+	}
+	return -1;
+}
+int main()
+{
+	ALGraph G;
+	while(true)
+	{
+		CreateUDG(G);
+		for(int i=0;i<G.vexnum;i++)
+		{
+			ArcNode *p=G.vertices[i].firstarc;
+			while(p!=NULL)
+			{
+				cout<<p->adjvex<<" ";
+				p=p->nextarc;
+			}
+			cout<<endl;
+		}
+		cin>>G.vexnum;
+	}
+	return 0;
+}
+
+
+
+
+
+#include <iostream>
+using namespace std;
+typedef enum {ATOM,LIST} ElemTag;
+#define MVNum 100
+typedef int OtherInform;
+typedef struct VNode
+{
+	char v;
+	struct ArcNode *firstarc;
+}VNode,AdjList[MVNum];
+typedef struct ArcNode
+{
+	char v;
+	OtherInform data;
+	struct ArcNode *nextvex;
+};
+typedef struct ALGraph
+{
+	AdjList vertices;
+	int vexnum,arcnum;
+};
+int LocateVex(ALGraph G,char v)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(G.vertices[i].v==v)
+			return i;
+	}
+	return -1;
+}
+int main()
+{
+	ALGraph G;
+	ArcNode *p,*q;
+	char v1,v2;
+	int w,i,k,j;
+	while(true)
+	{
+		cin>>G.vexnum>>G.arcnum;
+		for(i=0;i<G.vexnum;i++)
+		{
+			cin>>G.vertices[i].v;
+			G.vertices[i].firstarc=NULL;
+		}
+		for(k=0;k<G.arcnum;k++)
+		{
+			cin>>v1>>v2;
+			i=LocateVex(G,v1);
+			j=LocateVex(G,v2);
+			p=new ArcNode;
+			p->data=j;
+			p->nextvex=G.vertices[i].firstarc;
+			G.vertices[i].firstarc=p;
+
+			q=new ArcNode;
+			q->data=i;
+			q->nextvex=G.vertices[j].firstarc;
+			G.vertices[j].firstarc=q;
+		}
+		for(i=0;i<G.vexnum;i++)
+		{
+			p=G.vertices[i].firstarc;
+			while(p)
+			{
+				cout<<p->data<<" ";
+				p=p->nextvex;
+			}
+			cout<<endl;
+		}
+
+	}
+	return 0;
+}
+/*
+领接表的优点：
+①便于增加删除顶点
+②便于统计边的数目 时间复杂度为O(n+e)     //n代表顶点数e代表边数
+③空间效率高 空间复杂度为O(n+e)          //空间复杂度为
+一般用邻接表表示稀疏图  邻接矩阵表示稠密图   e< n（lgn）/lg2 为稀疏图  否则为稠密图
+缺点：
+①不便于判断两顶点之间是否有边 需要去扫描边表 最坏情况耗费O(n)
+②不便于计算各顶点的度如果是无向图 边表结点的个数即是顶点的度而在有向表中泽仅仅表示出度，计算入度需遍历各边表。
+*/

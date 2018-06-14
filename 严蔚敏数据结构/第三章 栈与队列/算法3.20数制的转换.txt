@@ -1,0 +1,75 @@
+#include "iostream"
+#include "string"
+using namespace std;
+typedef struct StackNode
+{
+	int data;
+	struct StackNode *next;
+}StackNode,*LinkStack;
+void InitStack(LinkStack &S)
+{
+	S=NULL;
+}
+void Push(LinkStack &S,int e)
+{
+	StackNode *p=new StackNode;
+	p->data=e;
+	p->next=S;
+	S=p;
+}
+bool Pop(LinkStack &S,int &e)
+{
+
+	if(!S)return false;
+	e=S->data;
+	StackNode *p;
+	p=S;
+	S=S->next;
+	delete p;
+	return true;
+}
+bool IsEmpty(LinkStack S)
+{
+	if(!S)return true;
+	return false;
+}
+bool IsCorrect(int &n)
+{
+	if(n>=0)return true;
+	n=-n;
+	return false;
+}
+int Trans(int &n,int k)
+{
+	int i;
+	i=n%k;
+	n/=k;
+	return i;
+}
+int main()
+{
+	int temp,T,k,n,i,f;
+	LinkStack S;
+	cin>>T;
+	while(T--)
+	{
+		cin>>n>>k;
+		temp=n;
+		f=IsCorrect(n);
+		InitStack(S);
+		while(n!=0)
+		{
+		  Push(S,Trans(n,k));
+		}
+		cout<<temp<<" ";
+		if(!f)cout<<"-";
+		int Sum=0;
+		while(!IsEmpty(S))
+		{
+			Pop(S,k);
+			Sum=Sum*10+k;
+		}
+		cout<<Sum<<endl;
+	}
+	return 0;
+}

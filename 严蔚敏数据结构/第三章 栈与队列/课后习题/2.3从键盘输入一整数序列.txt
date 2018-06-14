@@ -1,0 +1,73 @@
+#include "iostream"
+#include "string"
+using namespace std;
+typedef struct SNode
+{
+	int data;
+	struct SNode *next;
+}SNode,*LinkList;
+void InitStack(LinkList &S)
+{
+	S=new SNode;
+	S=NULL;
+}
+void Push(LinkList &S,int e)
+{
+	SNode *p=new SNode;
+	p->data=e;
+	p->next=S;
+	S=p;
+}
+bool Pop(LinkList &S,int &e)
+{
+	if(S==NULL)return false;
+	e=S->data;
+	SNode *p=S;
+	S=S->next;
+	delete p;
+	return true;
+}
+bool StackEmpty(LinkList S)
+{
+	if(S)return false;
+	return true;
+}
+bool GetTop(LinkList S,int &e)
+{
+	if(S){
+		e=S->data;
+		return true;
+	}
+	return false;
+}
+int main()
+{
+	int n,i,a,e;
+	while(cin>>n)
+	{
+		LinkList S;
+		InitStack(S);
+		for(i=0;i<n;i++)
+		{
+			cin>>a;
+			if(a!=-1)
+			{
+				Push(S,a);
+			}
+			else
+			{
+				if(StackEmpty(S))
+				{
+				     cout<<"当前栈空"<<endl;
+				}
+				else
+				{
+					GetTop(S,e);
+					cout<<"当前栈顶元素为："<<e<<endl;
+					Pop(S,e);
+				}
+			}
+		}
+	}
+	return 0;
+}

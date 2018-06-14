@@ -1,0 +1,83 @@
+#include <iostream>
+using namespace std;
+typedef struct LNode
+{
+	int data;
+	LNode *next;
+}LNode,*LinkList;
+void InitList(LinkList &L)
+{
+	L=new LNode;
+	L->next=NULL;
+}
+void InsertLNode(LinkList &L,int n)
+{
+	LNode *p=new LNode;
+	p->data=n;
+	p->next=NULL;
+	LNode *Mark;
+	Mark=L;
+	while(Mark)
+	{
+		if(Mark->next==NULL)
+		{
+			Mark->next=p;
+			break;
+		}
+		Mark=Mark->next;
+	}
+}
+void OutputList(LinkList &L)
+{
+	LNode *Mark;
+	Mark=L->next;
+	while(Mark)
+	{
+		cout<<Mark->data;
+		if(Mark->next!=NULL)cout<<" ";
+		Mark=Mark->next;
+	}
+	cout<<"\n";
+}
+bool GetElem(LinkList L,int j,int &e)
+{
+	LNode *Mark;
+	Mark=L->next;
+	int i=0;
+	while(Mark)
+	{
+		i++;
+		if(j==i)
+		{ 
+			e=Mark->data;
+			break;
+		}
+		Mark=Mark->next;
+	}
+	if(j!=i)
+		return false;
+	else
+		return true;
+}
+int main()
+{
+	int n,i,a,j,c;
+	while(cin>>n)
+	{
+		LinkList L;
+		LNode *p;
+		InitList(L);
+		for(i=0;i<n;i++)
+		{
+			cin>>a;
+			InsertLNode(L,a);
+		}
+		cin>>j;
+		if(GetElem(L,j,c)==true)
+			cout<<c<<endl;
+		else
+			cout<<"UNEXIST"<<endl;
+		//OutputList(L);
+	}
+	return 0;
+}

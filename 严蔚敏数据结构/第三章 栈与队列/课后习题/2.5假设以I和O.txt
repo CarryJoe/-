@@ -1,0 +1,78 @@
+#include "iostream"
+#include "string"
+using namespace std;
+typedef struct SNode
+{
+	char data;
+	struct SNode *next;
+}SNode,*LinkList;
+void InitStack(LinkList &S)
+{
+	S=new SNode;
+	S=NULL;
+}
+void Push(LinkList &S,char e)
+{
+	SNode *p=new SNode;
+	p->data=e;
+	p->next=S;
+	S=p;
+}
+bool Pop(LinkList &S,char &e)
+{
+	if(S==NULL)return false;
+	e=S->data;
+	SNode *p=S;
+	S=S->next;
+	delete p;
+	return true;
+}
+bool StackEmpty(LinkList S)
+{
+	if(S)return false;
+	return true;
+}
+bool GetTop(LinkList S,int &e)
+{
+	if(S){
+		e=S->data;
+		return true;
+	}
+	return false;
+}
+int main()
+{
+	int n,i;
+	string s;
+	char e,a;
+	bool f;
+	cin>>n;
+	while(n--)
+	{
+		LinkList S;
+		InitStack(S);
+		cin>>s;
+		f=true;
+		for(i=0;i<s.size();i++)
+		{
+			if(s[i]=='I')
+				Push(S,s[i]);
+			else 
+			{
+				if(StackEmpty(S))
+				{
+					f=false;
+					break;
+				}
+				else
+				{
+					Pop(S,e);
+				}
+			}
+		}
+		if(!StackEmpty(S))f=false;
+		if(f==true)cout<<"yes\n";
+		else cout<<"no\n";
+	}
+	return 0;
+}

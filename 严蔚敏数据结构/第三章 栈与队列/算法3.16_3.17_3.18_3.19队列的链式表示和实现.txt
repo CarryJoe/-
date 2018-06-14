@@ -1,0 +1,70 @@
+#include "iostream"
+#include "string"
+using namespace std;
+
+typedef struct QNode
+{
+	int data;
+	struct QNode *next;
+}QNode,*QueuePtr;
+typedef struct
+{
+	QueuePtr front;
+	QueuePtr rear;
+}LinkQueue;
+void InitQueue(LinkQueue &Q)
+{
+	Q.rear=new QNode;
+	Q.front=Q.rear;
+	Q.front->next=NULL;
+}
+void EnQueue(LinkQueue &Q,int e)
+{
+	QNode *p=new QNode;
+	p->next=NULL;
+	p->data=e;
+	Q.rear->next=p;
+	Q.rear=p;
+}
+bool DeQueue(LinkQueue &Q,int &e)
+{
+	if(Q.front->next==NULL)return false;
+	QNode *p=Q.front->next;
+	e=p->data;
+	
+	Q.front->next=p->next;
+	delete p;
+	return true;
+}
+bool GetHead(LinkQueue Q,int &e)
+{
+	if(Q.rear==Q.front)return false;
+	e=Q.front->next->data;
+	return true;
+}
+int main()
+{
+	int n,i,e;
+	LinkQueue Q;
+	while(cin>>n)
+	{
+		
+		InitQueue(Q);
+		for(i=0;i<n;i++)
+		{
+			cin>>e;
+			EnQueue(Q,e);
+		}
+		while(Q.front->next)
+		{
+		  DeQueue(Q,e);
+		  cout<<e;
+		  if(Q.front->next)cout<<" ";
+		  else cout<<endl; 
+		}
+
+		
+	}
+	return 0;
+     
+}

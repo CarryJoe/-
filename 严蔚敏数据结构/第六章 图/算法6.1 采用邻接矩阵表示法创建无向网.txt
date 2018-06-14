@@ -1,0 +1,66 @@
+#include <iostream>
+using namespace std;
+typedef enum {ATOM,LIST} ElemTag;
+#define MaxInt 73997
+#define MaxSize 100
+typedef struct Graph
+{
+	char Vex[MaxSize];
+	int Arcs[MaxSize][MaxSize];
+	int VexNum,ArcsNum;
+};
+int Location(char v,Graph G)
+{
+	for(int i=0;i<G.VexNum;i++)
+	{
+		if(v==G.Vex[i])
+			return i;
+	}
+	return -1;
+}
+int main()
+{
+	Graph G;
+	int i,j,k,p,w;
+	char v1,v2;
+	while(true)
+	{
+		cin>>G.VexNum>>G.ArcsNum;
+		for(i=0;i<G.VexNum;i++)
+		{
+			cin>>G.Vex[i];
+		}
+		for(i=0;i<G.VexNum;i++)
+		{
+			for(j=0;j<G.VexNum;j++)
+			{
+				G.Arcs[i][j]=MaxInt;
+			}
+		}
+		for(k=0;k<G.ArcsNum;k++)
+		{
+			cin>>v1>>v2>>w;
+			i=Location(v1,G);
+			j=Location(v2,G);
+			G.Arcs[i][j]=G.Arcs[j][i]=w;
+		}
+		for(i=0;i<G.VexNum;i++)
+		{
+			for(j=0;j<G.VexNum;j++)
+			{
+				cout<<G.Arcs[i][j]<<" ";
+			}
+			cout<<endl;
+		}
+	}
+}
+
+/*
+邻接矩阵的优点：
+①、便于查找两顶点之间是否右边
+②、便于计算各定点的度(入度与出度)
+缺点：
+①、不便于增加或删除结点
+②、不便于统计边的数目（时间复杂度高O(n^2)）
+③、空间复杂度高
+*/

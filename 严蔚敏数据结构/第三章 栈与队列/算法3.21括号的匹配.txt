@@ -1,0 +1,71 @@
+#include "iostream"
+#include "string"
+using namespace std;
+typedef struct StackNode
+{
+	char data;
+	struct StackNode *next;
+}StackNode,*LinkStack;
+void InitStack(LinkStack &S)
+{
+	S=NULL;
+}
+void Push(LinkStack &S,char e)
+{
+	StackNode *p=new StackNode;
+	p->data=e;
+	p->next=S;
+	S=p;
+}
+bool Pop(LinkStack &S,char &e)
+{
+
+	if(!S)return false;
+	e=S->data;
+	StackNode *p;
+	p=S;
+	S=S->next;
+	delete p;
+	return true;
+}
+bool IsEmpty(LinkStack S)
+{
+	if(!S)return true;
+	return false;
+}
+bool IsCorrect(LinkStack &S,string t)
+{
+	int i;
+	char Temp;
+	for(i=0;i<t.size();i++)
+	{
+		if(t[i]=='('||t[i]=='[')
+			Push(S,t[i]);
+		else
+		{
+			if(IsEmpty(S))
+				return false;
+			Pop(S,Temp);
+			if((Temp=='('&&t[i]!=')')||(Temp=='['&&t[i]!=']'))
+				return false;			
+		}
+	}
+	if(IsEmpty(S))
+		return true;
+	else 
+		return false;
+
+}
+int main()
+{
+	int temp,T,k,n,i,f;
+	LinkStack S;
+	string s;
+	while(cin>>s)
+	{
+		InitStack(S);           //一定要初始化
+		if(IsCorrect(S,s))cout<<"yes\n";
+		else cout<<"no\n";
+	}
+	return 0;
+}

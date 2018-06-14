@@ -1,0 +1,99 @@
+#include<iostream>
+using namespace std;
+#define MVNum 20
+
+typedef struct Graph
+{
+	bool visited[MVNum];
+	char vexs[MVNum];
+	int arc[MVNum][MVNum];
+	int vexnum,arcnum;
+};
+int LocateVex(Graph G,char v)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(G.vexs[i]==v)
+			return i;
+	}
+	return -1;
+}
+void Create(Graph &G)
+{
+	int i,j,k;
+	char v1,v2;
+	cin>>G.vexnum>>G.arcnum;
+	for(i=0;i<G.vexnum;i++)
+	{
+		G.vexs[i]=char(i+'A');
+		G.visited[i]=false;
+		for(j=0;j<G.vexnum;j++)
+		{
+			G.arc[i][j]=0;
+		}
+	}
+	for(k=0;k<G.arcnum;k++)
+	{
+		cin>>v1>>v2;
+		i=LocateVex(G,v1);
+		j=LocateVex(G,v2);
+		G.arc[i][j]=1;
+		G.arc[j][i]=1;
+	}
+}
+int FirstAdjVex(Graph G,int v)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(G.arc[v][i]==1&&!G.visited[i])
+			return i;
+	}
+	return -1;
+}
+int NextAdjVex(Graph G,int v,int w)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(G.arc[v][i]!=0&&!G.visited[i]&&i!=w)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+void DFS(Graph &G,int v)
+{
+	int w;
+	cout<<v;
+	G.visited[v]=true;
+	for(w=FirstAdjVex(G,v);w>=0;w=NextAdjVex(G,v,w))
+		if(!G.visited[w])
+			DFS(G,w);
+}
+int main()
+{
+	Graph G;
+	while(true)
+	{
+		Create(G);
+		
+			DFS(G,0);
+		
+		
+	}
+	return 0;
+}
+
+
+/*
+8 9
+A B
+B D
+B E
+C F
+C G
+F G
+D H
+E H
+A C
+*/

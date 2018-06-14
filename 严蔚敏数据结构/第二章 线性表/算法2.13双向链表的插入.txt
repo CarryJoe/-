@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+typedef struct DuLNode
+{
+	int data;
+	DuLNode *next;
+	DuLNode *prior;
+}DuLNode,*DuLinkList;
+void InitDuList(DuLinkList &L)
+{
+	L=new DuLNode;
+	L->next=NULL;
+	L->prior=NULL;
+}
+DuLNode *CreateDuLinkList(DuLinkList &L,int n)          //创建双向链表  
+{
+	DuLNode *Mark,*p;
+	Mark=L;
+	int i;
+	for(i=0;i<n;i++)
+	{
+		p=new DuLNode;
+		cin>>p->data;
+		p->next=NULL;
+		Mark->next=p;
+		p->prior=Mark;
+		Mark=Mark->next;
+	}
+	return Mark;
+}
+void OutPutList_Next(DuLinkList L)              //顺序输出
+{
+	DuLNode *Mark;
+	Mark=L->next;
+	while(Mark)
+	{
+		cout<<Mark->data;
+		if(Mark->next)cout<<" ";
+		else cout<<"\n";
+		Mark=Mark->next;
+	}
+}
+void OutPutList_Prior(DuLinkList L)              //逆序输出
+{
+	DuLNode *Mark;
+	Mark=L;
+	while(Mark->prior)
+	{
+		cout<<Mark->data;
+		if(Mark->prior->prior)cout<<" ";
+		else   cout<<"\n";
+		Mark=Mark->prior;
+	}
+}
+bool LinkInsert_DuL(DuLinkList &L,int i,int e)       //循环链表中插入新节点
+{
+  DuLNode *p,*s=new DuLNode;
+  s->data=e;
+  p=L->next;
+  int j=0;
+  while(p)
+  {
+	  j++;
+	  if(i==j)
+	  {
+		  s->prior=p->prior;
+		  s->next=p;
+		  p->prior->next=s;
+		  p->prior=s;
+		  break;
+	  }
+	  p=p->next;
+  }
+  if(i==j)return true;
+  return false;
+}
+int main()
+{
+	int n,i,a,j,e,T;
+	while(cin>>n)
+	{
+	      DuLinkList L;
+		  InitDuList(L);
+		  CreateDuLinkList(L,n);
+		  cin>>i>>n;    
+		  if(LinkInsert_DuL(L,i,n))
+		  OutPutList_Next(L);
+		  else
+			  cout<<"插入失败\n";
+		//  OutPutList_Prior(Mark);
+
+	}
+	return 0;
+}

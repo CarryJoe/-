@@ -1,0 +1,211 @@
+#include<iostream>//前辈代码
+using namespace std;
+
+typedef int VertexType;
+#define MAX_VERTEX_NUM 20
+typedef enum{unvisited,visited} VisitIf;
+typedef struct EBox
+{
+    VisitIf mark;            //访问标记 
+    int ivex, jvex;          //该边依附的两个顶点的位置
+    struct EBox *ilink, *jlink;//分别指向依附的两个顶点的下一条边
+    int info;                //该边信息指针，可指向权值或其他信息
+}EBox;
+typedef struct VexBox
+{
+    VertexType data;         
+    EBox *firstarc;          //指向第一条依附改点的边
+}VexBox;
+typedef struct
+{
+    VexBox adjmulist[MAX_VERTEX_NUM];
+    int vexnum, arcnum;      //无向图的当前顶点数和边数
+}AMLGraph;
+
+int LocateVex(AMLGraph G, VertexType v)// 初始条件：无向图G存在，v和G中顶点有相同特征  
+                                       // 操作结果：若G中存在顶点v，则返回该顶点在无向图中位置；否则返回-1  
+{
+    for (int i = 0; i < G.vexnum; i++)
+        if (G.adjmulist[i].data == v)
+            return i;
+    return -1;
+}
+
+void CreateGraph(AMLGraph &G)//采用邻接多重表构建无向图G
+{
+    VertexType v1, v2;
+    cout << "请输入总顶点数和总边数(用空格隔开):";
+    cin >> G.vexnum >> G.arcnum;
+    cout << "输入顶点" << endl;
+    for (int i = 0; i < G.vexnum; i++)//构造顶点向量
+    {
+        cin >> G.adjmulist[i].data ;
+        G.adjmulist[i].firstarc = NULL;
+    }
+    cout << "请输入每条边的两个端点以及权值:" << endl;
+    for (int k = 0; k < G.arcnum; k++)//构造表结点链表
+    {
+        EBox *p = new EBox;;
+        cin >> v1 >> v2 >>p->info;
+        int m = LocateVex(G, v1);//一端
+        int n = LocateVex(G, v2);//另一端
+        p->mark = unvisited;
+        p->ivex = m;         //插在一端表头
+        p->ilink = G.adjmulist[m].firstarc;
+        G.adjmulist[m].firstarc = p;
+        p->jvex = n;         //插在另一端表头
+        p->jlink = G.adjmulist[n].firstarc;
+        G.adjmulist[n].firstarc = p;
+    }
+}
+
+void MarkUnvizited(AMLGraph G)//置边的访问标记为未被访问
+{   
+    int i;
+    EBox *p;
+    for (i = 0; i<G.vexnum; i++)
+    {
+        p = G.adjmulist[i].firstarc;
+        while (p)
+        {
+            p->mark = unvisited;
+            if (p->ivex == i)
+                p = p->ilink;
+            else
+                p = p->jlink;
+        }
+    }
+}
+
+
+void display(AMLGraph G)//输出无向图的邻接多重表
+{
+    EBox *p;
+    MarkUnvizited(G);
+    cout << "无向图有" << G.vexnum << "个顶点，分别为:";
+    for (int i = 0; i < G.vexnum; i++)
+    {
+        cout << G.adjmulist[i].data << " ";
+        
+    }
+        cout << endl;
+        for (int i = 0; i < G.vexnum; i++)
+        {
+            cout << "和" << G.adjmulist[i].data << "有关的边:";
+            p = G.adjmulist[i].firstarc;
+            while (p)
+            {
+                if (p->ivex == i) // 边的m端与该顶点有关
+                {
+                    if (p->mark)
+                    {
+                        cout << G.adjmulist[i].data <<" "<< G.adjmulist[p->jvex].data<<"   ";
+                        p->mark = visited;
+                        if (p->info)
+                            cout << "权值:" << p->info << ". ";
+                    }
+                    p = p->ilink;
+                }
+                else              // 边的n端与该顶点有关
+                {
+                    if (!p->mark)
+                    {
+                        cout << G.adjmulist[p->ivex].data <<" "<< G.adjmulist[i].data<<"   ";
+                        p->mark = visited;
+                        if (p->info)
+                            cout << "权值:" << p->info << ". ";
+                    }
+                    p = p->jlink;
+                }
+            }
+            cout << endl;
+        }
+}
+
+int main()
+{
+    AMLGraph MG;
+    CreateGraph(MG);
+    display(MG);
+    return 0;
+}
+
+
+
+
+
+#include<iostream>
+using namespace std;
+#define MAX_VEX_NUM 20
+typedef bool VisitIf;
+typedef struct EBox
+{
+	VisitIf mark;
+	int ivex,jvex;
+	struct EBox *ilink,*jlink;
+	char data;
+}EBox;
+
+typedef struct VexBox
+{
+	char data;
+	EBox *firstedge;
+}VexBox,ADJmulist[MAX_VEX_NUM];
+typedef struct AMLGraph
+{
+	ADJmulist adhmulist;
+	int vexnum,arcnum;
+}ALMGraph;
+int LocateVex(ALMGraph G,char v)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(v==G.adhmulist[i].data)
+			return i;
+	}
+	return -1;
+}
+int main()
+{
+	ALMGraph G;
+	EBox *p;
+	int i,j,k;
+	char v1,v2;
+	while(true)
+	{
+		cin>>G.vexnum>>G.arcnum;
+		for(i=0;i<G.vexnum;i++)
+		{
+			G.adhmulist[i].data=char(i+'A');
+			G.adhmulist[i].firstedge=NULL;
+		}
+		for(k=0;k<G.arcnum;k++)
+		{
+			cin>>v1>>v2;
+			i=LocateVex(G,v1);
+			j=LocateVex(G,v2);
+			p=new EBox;
+			p->data=v2;
+			p->ivex=i;
+			p->jvex=j;
+			p->ilink=G.adhmulist[i].firstedge;
+			G.adhmulist[i].firstedge=p;
+
+			p->jlink=G.adhmulist[j].firstedge;
+			G.adhmulist[j].firstedge=p;
+
+		}
+		for(i=0;i<G.vexnum;i++)
+		{
+			p=G.adhmulist[i].firstedge;
+			while(p)
+			{
+				cout<<p->data;
+				p=p->ilink;
+			}
+			cout<<endl;
+		}
+	}
+	return 0;
+}
+

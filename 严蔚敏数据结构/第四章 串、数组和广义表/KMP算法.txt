@@ -1,0 +1,52 @@
+#include <iostream>
+#include <cmath>
+#include <string>
+using namespace std;
+
+void get_next(string T,int *next)
+{
+	int i,j;
+	i=1; next[1]=0;j=0;
+	while(i<T.size())
+	{
+		if(j==0||T[i]==T[j])
+		{
+			++i,++j;
+			next[i]=j;
+		}
+		else
+			j=next[j];
+	}
+}
+int Index_KMP(string s,string t,int pos,int *next)   //求第pos个字符后的
+{
+	int i=pos,j=1;
+	while(i<s.length()&&j<t.length())
+	{
+		if(j==0||s[i]==t[j]){
+			++i;
+			++j;
+		}
+		else j=next[j];
+	}
+	if(j==t.length())return i-t.length();
+	else return 0;
+}
+/*
+0acabaabaabcacaabc
+1abaabcac
+*/
+int main()
+{
+	string s,t;
+	int result,*next,length,i;
+	while(cin>>s)
+	{
+		cin>>t;
+		length=t.size();
+		next=new int [length];
+		get_next(t,next);
+		cout<<Index_KMP(s,t,3,next);
+	}
+	return 0;
+}

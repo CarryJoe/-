@@ -1,0 +1,155 @@
+ #include "iostream"
+using namespace std;
+typedef struct LNode 
+{
+	int data;
+	struct LNode *next;
+
+}LNode,*LinkList;
+int ListLength(LinkList L)
+{
+	LNode *p;
+	int length=0;
+	p=L->next;
+	while(p)
+	{
+		length++;
+		p=p->next;
+	}
+	return length;
+}
+void InitList(LinkList &L)
+{
+	L=new LNode;
+	L->next=NULL;
+}
+void CreateList(LinkList &L,int n)
+{
+	int i;
+	LNode *p,*Rear;
+	Rear=L;
+	for(i=0;i<n;i++)
+	{
+		p=new LNode;
+		cin>>p->data;
+		p->next=NULL;
+		Rear->next=p;
+		Rear=Rear->next;
+	}
+}
+bool GetElem(LinkList L,int i,int &e)
+{
+	int j=0;
+	LNode *p;
+	p=L->next;
+	while(p)
+	{
+
+		if(j==i)
+		{
+			e=p->data;
+			break;
+			return true;
+		}
+		j++;
+		p=p->next;
+	}
+	return false;
+}
+bool LocateElem(LinkList L,int e)
+{
+	LNode *p;
+	p=L->next;
+	while(p)
+	{
+		if(p->data==e)return true;
+		p=p->next;
+	}
+	return false;
+}
+bool ListInsert(LinkList &L,int m,int e)     
+{
+	int j=0;
+	LNode *p,*insert;
+	p=L->next;
+	while(p)
+	{
+		j++;
+		if(m==j+1)
+		{
+			insert=new LNode;
+			insert->data=e;
+
+			insert->next=p->next;
+			p->next=insert;
+			return true;
+		}
+		p=p->next;
+	}
+	return false;
+}
+void OutPutList(LinkList LA)
+{
+	LNode *p;
+	p=LA->next;
+	while(p)
+	{
+		cout<<p->data;
+		if(p->next)cout<<" ";
+		else
+			cout<<"\n";
+		p=p->next;
+	}
+}
+void MergeList_L(LinkList &LA,LinkList &LB,LinkList &LC)
+{
+	LNode *pa,*pb,*pc;
+	pa=LA->next,pb=LB->next;
+	pc=LC;
+	while(pa&&pb)
+	{
+		if(pa->data<pb->data)
+		{
+			pc->next=pa;
+			pc=pa;
+			pa=pa->next;
+		}
+		else if(pa->data>pb->data)
+		{
+			pc->next=pb;
+			pc=pb;
+			pb=pb->next;
+		}
+		else                 //去掉相同的元素
+		{
+			pc->next=pb;
+			pc=pc->next;
+			pb=pb->next;
+			pa=pa->next;
+		}
+	}
+	pc->next=pa?pa:pb;
+	delete LB;
+}
+
+
+
+
+int main()
+{
+	int n,m,T;
+	LinkList LA,LB,LC;
+	cin>>T;
+	while(T--)
+	{
+		cin>>n;
+		InitList(LA);
+		InitList(LB);
+		InitList(LC);
+		CreateList(LA,n);
+		CreateList(LB,n);
+		MergeList_L(LA,LB,LC);
+		OutPutList(LC);
+	}
+	return 0;
+}
