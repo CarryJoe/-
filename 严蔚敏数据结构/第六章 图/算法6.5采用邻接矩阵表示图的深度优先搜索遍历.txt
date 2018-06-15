@@ -1,0 +1,73 @@
+#include<iostream>
+using namespace std;
+#define MVNum 20
+bool visited[MVNum];
+typedef struct Graph
+{
+	int arc[MVNum][MVNum];
+	char vexs[MVNum];
+	int vexnum,arcnum;
+};
+int LocateVex(Graph G,char v)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(G.vexs[i]==v)
+			return i;
+	}
+	return -1;
+}
+void CreateGraph(Graph &G)
+{
+	int i,j,k;
+	cin>>G.vexnum>>G.arcnum;
+	for(i=0;i<G.vexnum;i++)
+	{
+		visited[i]=false;
+		G.vexs[i]=char(i+'A');
+		for(j=0;j<G.vexnum;j++)
+		{
+			G.arc[i][j]=0;
+		}
+	}
+	char v1,v2;
+	for(k=0;k<G.vexnum;k++)
+	{
+		cin>>v1>>v2;
+		i=LocateVex(G,v1);
+		j=LocateVex(G,v2);
+		G.arc[i][j]=G.arc[j][i]=1;
+	}
+}
+void DFS_AM(Graph G,int v)
+{
+	cout<<v;
+	visited[v]=true;
+	for(int i=0;i<G.vexnum;i++)
+		if(!visited[i]&&G.arc[i][v]!=0)
+			DFS_AM(G,i);
+}
+int main()
+{
+	Graph G;
+	while(true)
+	{
+		CreateGraph(G);
+		for(int i=0;i<G.vexnum;i++)
+			if(!visited[i])
+			DFS_AM(G,i);
+	}
+	return 0;
+}
+/*
+8 8
+A B
+B D
+B E
+C F
+C G
+F G
+D H
+E H
+A C
+*/

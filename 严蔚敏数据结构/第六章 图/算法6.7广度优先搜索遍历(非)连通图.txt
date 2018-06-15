@@ -1,0 +1,112 @@
+#include<iostream>
+using namespace std;
+#define MVNum 20
+bool visited[MVNum];
+typedef struct Queue
+{
+	int front,tail;
+	int a[MVNum];
+}Queue;
+void InitQueue(Queue &Q)
+{
+	Q.front=0;
+	Q.tail=0;
+}
+void EnQueue(Queue &Q,int v)
+{
+	Q.a[Q.tail]=v;
+	Q.tail++;
+}
+void DeQueue(Queue &Q,int &u)
+{
+	u=Q.a[Q.front];
+	Q.front++;
+}
+bool QueueEmpty(Queue Q)
+{
+	if(Q.front==Q.tail)return true;
+	return false;
+}
+typedef struct Graph
+{
+	int vexnum,arcnum;
+	char vexs[MVNum];
+	int vexarc[MVNum][MVNum];
+};
+int LocateVex(Graph G,char v)
+{
+	for(int i=0;i<G.vexnum;i++)
+	{
+		if(v==G.vexs[i])
+			return i;
+	}
+	return -1;
+}
+void CreateGraph(Graph &G)
+{
+	int i,j,k;
+	char v1,v2;
+	cin>>G.vexnum>>G.arcnum;
+	for(i=0;i<G.vexnum;i++)
+	{
+		G.vexs[i]=char(i+'A');
+		visited[i]=false;
+		for(j=0;j<G.vexnum;j++)
+			G.vexarc[i][j]=0;
+	}
+	for(k=0;k<G.arcnum;k++)
+	{
+		cin>>v1>>v2;
+		i=LocateVex(G,v1);
+		j=LocateVex(G,v2);
+		G.vexarc[i][j]=G.vexarc[j][i]=1;
+	}
+}
+void BFS(Graph G,int v)
+{
+	Queue Q;
+	int u;
+	cout<<v;
+	visited[v]=true;
+	InitQueue(Q);
+	EnQueue(Q,v);
+	while(!QueueEmpty(Q))
+	{
+		DeQueue(Q,u);
+		for(int i=0;i<G.vexnum;i++)
+		{
+			if(G.vexarc[i][u]==1&&!visited[i])
+			{
+				visited[i]=true;
+				cout<<i;
+				EnQueue(Q,i);
+			}
+		}
+	}
+}
+int main()
+{
+	Graph G;
+	while(true)
+	{
+		CreateGraph(G);
+		for(int i=0;i<G.vexnum;i++)
+		{
+			if(!visited[i])
+			BFS(G,i);
+		}
+	}
+	return 0;
+}
+/*
+8 8
+A B
+B D
+B E
+C F
+C G
+F G
+D H
+E H
+A C
+*/
